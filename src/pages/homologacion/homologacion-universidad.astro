@@ -1,0 +1,87 @@
+---
+import SubpageLayout from '../../components/layout/SubpageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import FinalCTA from '../../components/sections/FinalCTA.astro';
+import Icon from '../../components/ui/Icon.astro';
+
+const documentos = [
+  'Título universitario apostillado',
+  'Certificado académico de notas apostillado',
+  'Plan de estudios (contenido de asignaturas) sellado por la universidad',
+  'Acreditación de identidad (pasaporte o NIE)',
+  'Tasa administrativa abonada',
+];
+
+const fases = [
+  'Análisis de viabilidad: profesión, universidad y plan de estudios',
+  'Revisión de documentos y apostillas',
+  'Presentación telemática ante el Ministerio',
+  'Seguimiento del expediente y respuesta a requerimientos',
+  'Resolución: homologación, equivalencia o complementos formativos',
+];
+---
+
+<SubpageLayout
+  title="Homologación de Títulos Universitarios — InstitutoDeGestiones"
+  description="Homologa tu título universitario en España para ejercer tu profesión. Gestionamos el expediente completo ante el Ministerio. Evaluación gratuita en 24h."
+  canonical="https://institutodegestiones.com/homologacion/homologacion-universidad/"
+  ctaHref="#evaluacion"
+>
+  <PageHero
+    eyebrow="Homologación"
+    title="Homologación de Títulos Universitarios"
+    subtitle="Valida tu título universitario para ejercer tu profesión en España."
+  />
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-4xl space-y-12 px-4 lg:px-8">
+      <div class="fade-in-up space-y-4 text-body-lg text-muted">
+        <p>
+          Si quieres ejercer en España una profesión regulada —medicina, derecho, arquitectura, ingeniería,
+          enfermería, docencia, entre otras— necesitas homologar tu título universitario extranjero. Para el resto de
+          titulaciones existe la <strong class="text-ink">equivalencia</strong>, que reconoce tu título a nivel
+          académico.
+        </p>
+        <p>
+          El expediente se presenta ante el Ministerio competente y su resolución puede tardar varios meses. Presentar
+          la documentación completa y correctamente apostillada desde el inicio es clave para evitar requerimientos.
+        </p>
+      </div>
+
+      <div class="fade-in-up">
+        <h2 class="font-display text-2xl font-bold text-navy">Documentación necesaria</h2>
+        <ul class="mt-5 space-y-3">
+          {documentos.map((d) => (
+            <li class="flex items-start gap-3">
+              <Icon name="check" class="mt-1 h-5 w-5 shrink-0 text-gold" />
+              <span class="text-ink">{d}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="fade-in-up">
+        <h2 class="font-display text-2xl font-bold text-navy">Cómo te acompañamos</h2>
+        <ol class="mt-6 space-y-4">
+          {fases.map((f, i) => (
+            <li class="flex items-start gap-4">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold font-bold text-white">{i + 1}</span>
+              <span class="pt-1.5 text-ink">{f}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div class="fade-in-up rounded-card bg-light p-8">
+        <h2 class="font-display text-2xl font-bold text-navy">Plazos orientativos</h2>
+        <p class="mt-3 text-body-lg text-muted">
+          Según la profesión, la resolución puede tardar entre 6 y 12 meses o más. En tu evaluación gratuita te damos
+          una estimación realista para tu titulación concreta y te indicamos si necesitas homologación, equivalencia o
+          colegiación.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+</SubpageLayout>

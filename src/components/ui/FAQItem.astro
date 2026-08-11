@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  question: string;
+  answer: string;
+  open?: boolean;
+}
+
+const { question, answer, open = false } = Astro.props;
+---
+
+<div class:list={['faq-item rounded-card border transition-colors duration-300', open ? 'open border-ink/15 bg-white shadow-card' : 'border-ink/10 bg-white']}>
+  <button
+    type="button"
+    class="faq-toggle flex w-full items-center justify-between gap-4 px-5 py-4 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-sello sm:px-6"
+    aria-expanded={open}
+  >
+    <span class="font-display text-base font-semibold text-tinta sm:text-lg">{question}</span>
+    <Icon name="chevron-down" class="faq-chevron h-5 w-5 shrink-0 text-navy transition-transform duration-300" />
+  </button>
+  <div class="faq-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300">
+    <div class="overflow-hidden">
+      <p class="border-t border-ink/10 px-5 py-4 leading-relaxed text-muted sm:px-6">{answer}</p>
+    </div>
+  </div>
+</div>

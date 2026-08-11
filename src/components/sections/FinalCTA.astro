@@ -1,0 +1,26 @@
+---
+import LeadForm from '../ui/LeadForm.astro';
+---
+
+<section id="evaluacion" class="bg-tinta py-14 lg:py-24">
+  <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 lg:grid-cols-2 lg:gap-16 lg:px-8">
+    <div class="fade-in-up">
+      <p class="font-mono text-[11px] font-medium uppercase tracking-[0.24em] text-white/50">Evaluación gratuita</p>
+      <h2 class="mt-3 font-display text-3xl font-bold text-white lg:text-display-lg">
+        Da el primer paso: cuéntanos tu caso
+      </h2>
+      <p class="mt-4 text-body-lg text-white/65">
+        Completa el formulario y un especialista analizará tu situación en menos de 24 horas laborables. Recibirás un
+        diagnóstico claro: qué vía aplica, qué documentos necesitas y cuánto tarda.
+      </p>
+      <ul class="mt-8 space-y-2 font-mono text-[11px] uppercase tracking-[0.16em] text-white/55">
+        <li>Sin coste y sin compromiso</li>
+        <li>Confidencial · Conforme al RGPD</li>
+        <li>Respuesta de un especialista, no de un robot</li>
+      </ul>
+    </div>
+    <div class="fade-in-up" style="transition-delay: 150ms">
+      <LeadForm variant="dark" />
+    </div>
+  </div>
+</section>

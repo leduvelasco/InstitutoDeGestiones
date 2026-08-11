@@ -1,0 +1,35 @@
+---
+import LeadForm from '../ui/LeadForm.astro';
+---
+
+<section class="bg-light bg-dots">
+  <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:px-8 lg:py-20">
+    <div class="fade-in-up">
+      <p class="font-mono text-[11px] font-medium uppercase tracking-[0.24em] text-gold">
+        Gestoría de extranjería · Madrid · Desde 1999
+      </p>
+      <h1 class="mt-5 font-display text-4xl font-bold text-tinta md:text-display-xl">
+        Vivir legalmente en España es un trámite. Hay que hacerlo bien.
+      </h1>
+      <p class="mt-6 max-w-xl text-body-lg text-muted">
+        Estudiamos tu situación, te decimos qué vía aplica a tu caso y gestionamos el expediente completo: visados,
+        residencia, reagrupación familiar y homologación de títulos. Más de 25 años haciéndolo para clientes de 15
+        países.
+      </p>
+      <ul class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-ink/10 pt-6 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+        <li>Evaluación sin coste</li>
+        <li aria-hidden="true" class="text-ink/25">·</li>
+        <li>Respuesta en 24 h laborables</li>
+        <li aria-hidden="true" class="text-ink/25">·</li>
+        <li>Honorarios por escrito</li>
+      </ul>
+    </div>
+
+    <div class="fade-in-up" style="transition-delay: 150ms">
+      <LeadForm />
+      <p class="mt-4 text-center text-sm text-muted">
+        La evaluación es una primera consulta real: recibes un diagnóstico de tu caso, no un discurso de venta.
+      </p>
+    </div>
+  </div>
+</section>

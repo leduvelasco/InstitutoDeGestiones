@@ -1,0 +1,110 @@
+---
+import Icon from '../ui/Icon.astro';
+import { SITE, WHATSAPP_URL } from '../../data/site';
+
+const services = [
+  { label: 'Estudio migratorio', href: '/visado/estudio-migratorio/' },
+  { label: 'Visado de estudios', href: '/visado/visado-de-estudios/' },
+  { label: 'Residencia legal', href: '/residencia/residencia-legal/' },
+  { label: 'Reagrupación familiar', href: '/residencia/reagrupacion-familiar/' },
+  { label: 'Homologación universitaria', href: '/homologacion/homologacion-universidad/' },
+  { label: 'Homologación no universitaria', href: '/homologacion/homologacion-tenico/' },
+  { label: 'Nacionalidad española', href: '/visado/nacionalidad-espanola/' },
+];
+
+const company = [
+  { label: 'Quiénes somos', href: '/sobre-nosotros/' },
+  { label: 'Preguntas frecuentes', href: '/faq/' },
+  { label: 'Contacto', href: '/contacto/' },
+  { label: 'Gestiones en España', href: '/gestiones-en-espana/' },
+];
+
+const legal = [
+  { label: 'Política de privacidad', href: '/politica-de-privacidad-policy/' },
+  { label: 'Aviso legal', href: '/aviso-legal/' },
+  { label: 'Condiciones de contratación', href: '/condiciones-de-contratacion/' },
+  { label: 'Política de cookies', href: '/politica-cookies/' },
+];
+
+const social = [
+  { label: 'Facebook', icon: 'facebook', href: '#' },
+  { label: 'Twitter', icon: 'twitter', href: '#' },
+  { label: 'LinkedIn', icon: 'linkedin', href: '#' },
+];
+---
+
+<footer class="bg-navy-dark pb-10 pt-14 text-white">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
+    <div>
+      <p class="font-display text-xl font-bold leading-none">Instituto de Gestiones</p>
+      <p class="mt-1.5 font-mono text-[10px] uppercase tracking-[0.28em] text-white/45">Gestoría de extranjería · Madrid</p>
+      <p class="mt-5 text-sm leading-relaxed text-white/65">
+        Te acompañamos en cada paso para vivir legalmente en España: residencia, nacionalidad, visados y homologación
+        de títulos.
+      </p>
+      <div class="mt-5 flex gap-3">
+        {social.map((s) => (
+          <a
+            href={s.href}
+            aria-label={s.label}
+            class="flex h-9 w-9 items-center justify-center rounded-card border border-white/15 text-white/70 transition-colors hover:border-white/40 hover:text-white"
+          >
+            <Icon name={s.icon} class="h-4 w-4" />
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <nav aria-label="Servicios">
+      <p class="font-mono text-[10px] font-medium uppercase tracking-[0.24em] text-white/45">Servicios</p>
+      <ul class="mt-4 space-y-2.5">
+        {services.map((s) => (
+          <li><a href={s.href} class="text-sm text-white/70 transition-colors hover:text-white">{s.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav aria-label="Empresa">
+      <p class="font-mono text-[10px] font-medium uppercase tracking-[0.24em] text-white/45">Empresa</p>
+      <ul class="mt-4 space-y-2.5">
+        {company.map((s) => (
+          <li><a href={s.href} class="text-sm text-white/70 transition-colors hover:text-white">{s.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div>
+      <p class="font-mono text-[10px] font-medium uppercase tracking-[0.24em] text-white/45">Contacto</p>
+      <ul class="mt-4 space-y-2.5 text-sm text-white/70">
+        <li class="flex items-start gap-2"><Icon name="map-pin" class="mt-0.5 h-4 w-4 shrink-0 text-white/40" />{SITE.address}</li>
+        <li class="flex items-start gap-2"><Icon name="clock" class="mt-0.5 h-4 w-4 shrink-0 text-white/40" />Lun–Vie · 9:00–18:00 (CET)</li>
+        <li>
+          <a href={SITE.phoneHref} class="flex items-center gap-2 transition-colors hover:text-white">
+            <Icon name="phone" class="h-4 w-4 shrink-0 text-white/40" />{SITE.phoneDisplay}
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${SITE.email}`} class="flex items-center gap-2 transition-colors hover:text-white">
+            <Icon name="mail" class="h-4 w-4 shrink-0 text-white/40" />{SITE.email}
+          </a>
+        </li>
+      </ul>
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener"
+        class="mt-5 inline-flex items-center gap-2 rounded-card bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1DA851]"
+      >
+        <Icon name="whatsapp" class="h-4 w-4" />
+        Escríbenos por WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <div class="mx-auto mt-12 max-w-7xl border-t border-white/10 px-4 pt-6 lg:px-8">
+    <p class="text-sm text-white/55">© 2026 Instituto de Gestiones. Todos los derechos reservados.</p>
+    <nav class="mt-3 flex flex-wrap gap-x-6 gap-y-2" aria-label="Legal">
+      {legal.map((l) => <a href={l.href} class="text-sm text-white/55 transition-colors hover:text-white">{l.label}</a>)}
+    </nav>
+  </div>
+</footer>

@@ -1,0 +1,67 @@
+---
+import Button from '../ui/Button.astro';
+
+interface Props {
+  ctaHref?: string;
+}
+
+const { ctaHref = '#evaluacion' } = Astro.props;
+
+const steps = [
+  {
+    n: '01',
+    title: 'Evaluación gratuita en 24 h',
+    text: 'Rellenas el formulario con tu situación básica. Un especialista analiza tu caso y te contacta en menos de 24 horas laborables.',
+  },
+  {
+    n: '02',
+    title: 'Diagnóstico y vías aplicables',
+    text: 'Sin rodeos: te explicamos qué vías legales aplican a tu caso, con tiempos reales y requisitos concretos.',
+  },
+  {
+    n: '03',
+    title: 'Gestión del expediente completo',
+    text: 'Preparamos toda tu documentación, te acompañamos en cada paso y hacemos seguimiento hasta la resolución.',
+  },
+  {
+    n: '04',
+    title: 'Llegada y seguimiento en España',
+    text: 'Una vez en España, te orientamos con los trámites de llegada: TIE, empadronamiento y todo lo que necesites.',
+  },
+];
+---
+
+<section class="bg-tinta py-14 lg:py-24">
+  <div class="mx-auto max-w-7xl px-4 lg:px-8">
+    <div class="fade-in-up max-w-2xl">
+      <p class="font-mono text-[11px] font-medium uppercase tracking-[0.24em] text-white/50">Procedimiento</p>
+      <h2 class="mt-3 font-display text-3xl font-bold text-white lg:text-display-lg">Tu camino hacia España, fase a fase</h2>
+      <p class="mt-3 text-body-lg text-white/65">
+        Sabemos que empezar un proceso migratorio genera incertidumbre. Por eso lo hacemos simple y te decimos en todo
+        momento en qué punto está tu expediente.
+      </p>
+    </div>
+
+    <div class="relative mt-12">
+      <div class="absolute left-6 top-0 h-full w-px bg-white/15 md:hidden" aria-hidden="true"></div>
+      <div class="absolute left-[12.5%] right-[12.5%] top-6 hidden h-px bg-white/15 md:block" aria-hidden="true"></div>
+      <ol class="relative grid gap-10 md:grid-cols-4 md:gap-6">
+        {steps.map((step, i) => (
+          <li class="fade-in-up relative flex gap-5 md:flex-col" style={`transition-delay:${i * 120}ms`}>
+            <span class="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-card border border-white/30 bg-tinta font-mono text-sm font-semibold text-white">
+              {step.n}
+            </span>
+            <div class="pt-1 md:pt-4">
+              <h3 class="text-base font-semibold text-white">{step.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-white/60">{step.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="mt-12">
+      <Button href={ctaHref} size="lg">Solicitar evaluación gratuita</Button>
+    </div>
+  </div>
+</section>

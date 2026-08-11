@@ -1,0 +1,78 @@
+---
+import SubpageLayout from '../../components/layout/SubpageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import FinalCTA from '../../components/sections/FinalCTA.astro';
+import Icon from '../../components/ui/Icon.astro';
+
+const estudios = [
+  { title: 'Bachillerato', text: 'Homologación al título de Bachiller español para acceder a estudios superiores u oposiciones.' },
+  { title: 'Formación Profesional', text: 'Homologación de ciclos formativos y títulos técnicos a sus equivalentes españoles.' },
+  { title: 'Estudios primarios / ESO', text: 'Equivalencia de estudios primarios o secundarios inferiores a la ESO.' },
+];
+
+const documentos = [
+  'Título o diploma apostillado',
+  'Certificado de estudios o notas apostillado',
+  'Acreditación de identidad (pasaporte o NIE)',
+  'Tasa administrativa abonada',
+];
+---
+
+<SubpageLayout
+  title="Homologación de Títulos No Universitarios — InstitutoDeGestiones"
+  description="Homologa tu bachillerato, FP o ciclos formativos en España. Gestionamos el expediente completo. Evaluación gratuita en 24h."
+  canonical="https://institutodegestiones.com/homologacion/homologacion-tenico/"
+  ctaHref="#evaluacion"
+>
+  <PageHero
+    eyebrow="Homologación"
+    title="Homologación No Universitaria"
+    subtitle="Homologa tus estudios de bachillerato, FP o ciclos formativos."
+  />
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-4xl space-y-12 px-4 lg:px-8">
+      <div class="fade-in-up space-y-4 text-body-lg text-muted">
+        <p>
+          Si tus estudios no son universitarios —bachillerato, formación profesional o ciclos formativos— también
+          puedes homologarlos o declararlos equivalentes en España. Es imprescindible para acceder a la universidad,
+          cursar una FP superior o presentarte a oposiciones.
+        </p>
+      </div>
+
+      <div class="fade-in-up">
+        <h2 class="font-display text-2xl font-bold text-navy">¿Qué estudios tramitamos?</h2>
+        <div class="mt-6 grid gap-6 md:grid-cols-3">
+          {estudios.map((e) => (
+            <div class="rounded-card border border-gray-100 bg-light p-6">
+              <h3 class="font-display text-lg font-semibold text-navy">{e.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">{e.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="fade-in-up">
+        <h2 class="font-display text-2xl font-bold text-navy">Documentación necesaria</h2>
+        <ul class="mt-5 space-y-3">
+          {documentos.map((d) => (
+            <li class="flex items-start gap-3">
+              <Icon name="check" class="mt-1 h-5 w-5 shrink-0 text-gold" />
+              <span class="text-ink">{d}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="fade-in-up rounded-card bg-light p-8">
+        <h2 class="font-display text-2xl font-bold text-navy">Plazos orientativos</h2>
+        <p class="mt-3 text-body-lg text-muted">
+          La resolución suele tardar entre 3 y 8 meses según el tipo de estudios y la carga administrativa. Nosotros
+          preparamos el expediente completo, lo presentamos y hacemos seguimiento hasta la resolución.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+</SubpageLayout>

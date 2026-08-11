@@ -1,0 +1,22 @@
+---
+import SubpageLayout from '../components/layout/SubpageLayout.astro';
+import PageHero from '../components/layout/PageHero.astro';
+import FAQ from '../components/sections/FAQ.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+---
+
+<SubpageLayout
+  title="Preguntas Frecuentes — InstitutoDeGestiones | Migraciones a España"
+  description="Resolvemos las dudas más frecuentes sobre visados, residencia, reagrupación familiar y homologación de títulos en España."
+  canonical="https://institutodegestiones.com/faq/"
+  ctaHref="#evaluacion"
+>
+  <PageHero
+    eyebrow="FAQ"
+    title="Preguntas frecuentes"
+    subtitle="Todo lo que necesitas saber antes de empezar tu proceso migratorio a España."
+  />
+
+  <FAQ showHeader={false} />
+  <FinalCTA />
+</SubpageLayout>

@@ -1,0 +1,94 @@
+---
+import ServiceCard from '../ui/ServiceCard.astro';
+import Icon from '../ui/Icon.astro';
+
+const services = [
+  {
+    icon: 'graduation-cap',
+    tag: 'Estancia por estudios',
+    title: 'Visado de Estudios',
+    href: '/visado/visado-de-estudios/',
+    description: 'Estudia en España con residencia y autorización para trabajar hasta 30 h semanales.',
+  },
+  {
+    icon: 'home',
+    tag: 'Modelo EX-01',
+    title: 'Residencia Legal',
+    href: '/residencia/residencia-legal/',
+    description: 'Conoce todas las vías para obtener y renovar tu residencia en España.',
+  },
+  {
+    icon: 'users',
+    tag: 'Modelo EX-02',
+    title: 'Reagrupación Familiar',
+    href: '/residencia/reagrupacion-familiar/',
+    description: 'Reúne a tu pareja e hijos contigo en España de forma completamente legal.',
+  },
+  {
+    icon: 'search',
+    tag: 'Análisis de caso',
+    title: 'Estudio Migratorio',
+    href: '/visado/estudio-migratorio/',
+    description: 'Analizamos tu caso y te indicamos la vía más adecuada para ti. Sin coste.',
+  },
+  {
+    icon: 'file-text',
+    tag: 'RD 889/2022',
+    title: 'Homologación Universitaria',
+    href: '/homologacion/homologacion-universidad/',
+    description: 'Valida tu título universitario para ejercer tu profesión en España.',
+  },
+  {
+    icon: 'award',
+    tag: 'RD 889/2022',
+    title: 'Homologación No Universitaria',
+    href: '/homologacion/homologacion-tenico/',
+    description: 'Homologa tus estudios de bachillerato, FP o ciclos formativos.',
+  },
+];
+---
+
+<section class="bg-light py-14 lg:py-20">
+  <div class="mx-auto max-w-7xl px-4 lg:px-8">
+    <div class="fade-in-up max-w-2xl">
+      <p class="font-mono text-[11px] font-medium uppercase tracking-[0.24em] text-gold">Servicios</p>
+      <h2 class="mt-3 font-display text-3xl font-bold text-tinta lg:text-display-lg">
+        Las vías para residir legalmente en España
+      </h2>
+      <p class="mt-3 text-body-lg text-muted">
+        Analizamos tu situación y te decimos exactamente qué opciones tienes. Cada trámite tiene su modelo oficial y su
+        plazo; nosotros los conocemos todos.
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {services.map((s, i) => (
+        <div class="fade-in-up h-full" style={`transition-delay:${i * 80}ms`}>
+          <ServiceCard icon={s.icon} tag={s.tag} title={s.title} description={s.description} href={s.href} />
+        </div>
+      ))}
+    </div>
+
+    <a
+      href="/visado/nacionalidad-espanola/"
+      class="fade-in-up group mt-5 flex flex-col gap-6 rounded-card border border-white/10 bg-tinta p-7 transition-colors duration-300 hover:bg-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sello md:flex-row md:items-center md:p-8"
+    >
+      <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-card border border-white/15 text-white">
+        <Icon name="flag" class="h-7 w-7" />
+      </span>
+      <span class="flex-1">
+        <span class="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span class="font-display text-xl font-semibold text-white">Nacionalidad Española</span>
+          <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-white/50">Residencia · 2 años</span>
+        </span>
+        <span class="mt-2 block leading-relaxed text-white/70">
+          Dos años de residencia legal bastan para solicitarla si eres nacional de un país iberoamericano. Te
+          preparamos para el CCSE y el DELE y presentamos tu solicitud.
+        </span>
+      </span>
+      <span class="font-mono text-xs font-medium uppercase tracking-[0.14em] text-white transition-colors group-hover:text-white">
+        Ver detalles →
+      </span>
+    </a>
+  </div>
+</section>

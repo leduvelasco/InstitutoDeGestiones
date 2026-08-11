@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Hero from '../components/sections/Hero.astro';
+import SocialProof from '../components/sections/SocialProof.astro';
+import Services from '../components/sections/Services.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import WhyUs from '../components/sections/WhyUs.astro';
+import SpainServices from '../components/sections/SpainServices.astro';
+import FAQ from '../components/sections/FAQ.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import StickyMobileBar from '../components/ui/StickyMobileBar.astro';
+import WhatsAppFloat from '../components/ui/WhatsAppFloat.astro';
+---
+
+<BaseLayout
+  title="InstitutoDeGestiones — Gestoría de Migraciones a España | Evaluación Gratuita en 24h"
+  description="Especialistas en migraciones a España para latinoamericanos. Visados de estudios, residencia legal, reagrupación familiar y homologación de títulos. +25 años de experiencia. Evaluación gratuita en 24h."
+  keywords="migraciones a España, visado estudios España, residencia legal España, reagrupación familiar España, homologación títulos España, gestoría migraciones latinoamericanos"
+  canonical="https://institutodegestiones.com/"
+>
+  <Header />
+  <main>
+    <Hero />
+    <SocialProof />
+    <Services />
+    <HowItWorks />
+    <Testimonials />
+    <WhyUs />
+    <SpainServices />
+    <FAQ />
+    <FinalCTA />
+  </main>
+  <Footer />
+  <StickyMobileBar ctaHref="#evaluacion" />
+  <WhatsAppFloat />
+</BaseLayout>

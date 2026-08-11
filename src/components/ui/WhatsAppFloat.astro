@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+import { WHATSAPP_URL } from '../../data/site';
+---
+
+<a
+  href={WHATSAPP_URL}
+  target="_blank"
+  rel="noopener"
+  class="group fixed bottom-6 right-6 z-[998] hidden md:flex"
+  aria-label="Chatea con un especialista por WhatsApp"
+>
+  <span class="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 whitespace-nowrap rounded bg-ink px-3 py-1.5 text-sm text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+    Chatea con un especialista
+  </span>
+  <span class="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-card-hover transition-transform duration-200 hover:scale-105">
+    <Icon name="whatsapp" class="h-7 w-7" />
+  </span>
+</a>

@@ -1,0 +1,71 @@
+---
+import SubpageLayout from '../components/layout/SubpageLayout.astro';
+import PageHero from '../components/layout/PageHero.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import Icon from '../components/ui/Icon.astro';
+import { SITE, WHATSAPP_URL } from '../data/site';
+---
+
+<SubpageLayout
+  title="Contacto — InstitutoDeGestiones | Evaluación Gratuita en 24h"
+  description="Contacta con InstitutoDeGestiones: evaluación gratuita de tu caso migratorio en menos de 24 horas. WhatsApp, teléfono, email y formulario."
+  canonical="https://institutodegestiones.com/contacto/"
+>
+  <PageHero
+    eyebrow="Contacto"
+    title="Cuéntanos tu caso"
+    subtitle="Rellena el formulario y un especialista te contactará en menos de 24 horas. Sin coste y sin compromiso."
+  />
+
+  <section id="evaluacion" class="bg-white py-14 lg:py-20">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-2 lg:gap-16 lg:px-8">
+      <div class="fade-in-up">
+        <h2 class="font-display text-3xl font-bold text-navy">Estamos aquí para ayudarte</h2>
+        <p class="mt-4 text-body-lg text-muted">
+          Elige el canal que prefieras. Respondemos todas las consultas en menos de 24 horas laborables.
+        </p>
+        <ul class="mt-8 space-y-4">
+          <li class="flex items-start gap-3">
+            <Icon name="map-pin" class="mt-1 h-5 w-5 shrink-0 text-gold" />
+            <span class="text-ink">{SITE.address}</span>
+          </li>
+          <li>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener" class="flex items-center gap-3 text-ink transition-colors hover:text-blue">
+              <Icon name="whatsapp" class="h-5 w-5 shrink-0 text-gold" />
+              WhatsApp: {SITE.phoneDisplay}
+            </a>
+          </li>
+          <li>
+            <a href={SITE.phoneHref} class="flex items-center gap-3 text-ink transition-colors hover:text-blue">
+              <Icon name="phone" class="h-5 w-5 shrink-0 text-gold" />
+              Teléfono: {SITE.phoneDisplay}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${SITE.email}`} class="flex items-center gap-3 text-ink transition-colors hover:text-blue">
+              <Icon name="mail" class="h-5 w-5 shrink-0 text-gold" />
+              {SITE.email}
+            </a>
+          </li>
+          <li class="flex items-start gap-3">
+            <Icon name="clock" class="mt-1 h-5 w-5 shrink-0 text-gold" />
+            <span class="text-ink">Lunes a viernes: 9:00 – 18:00 (hora de Madrid)</span>
+          </li>
+        </ul>
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener"
+          class="mt-8 inline-flex items-center gap-2 rounded-card bg-[#25D366] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1DA851]"
+        >
+          <Icon name="whatsapp" class="h-5 w-5" />
+          Chatear por WhatsApp ahora
+        </a>
+      </div>
+
+      <div class="fade-in-up" style="transition-delay: 150ms">
+        <LeadForm />
+      </div>
+    </div>
+  </section>
+</SubpageLayout>

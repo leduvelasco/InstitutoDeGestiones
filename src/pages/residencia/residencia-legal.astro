@@ -1,0 +1,80 @@
+---
+import SubpageLayout from '../../components/layout/SubpageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import FinalCTA from '../../components/sections/FinalCTA.astro';
+import Icon from '../../components/ui/Icon.astro';
+
+const vias = [
+  {
+    icon: 'home',
+    title: 'Residencia no lucrativa',
+    text: 'Para vivir en España sin trabajar, acreditando medios económicos suficientes. Ideal para teletrabajadores con ahorros, jubilados y rentistas.',
+  },
+  {
+    icon: 'briefcase',
+    title: 'Arraigo social, laboral y familiar',
+    text: 'Si ya estás en España, existen vías de regularización según tu tiempo de permanencia, vínculos familiares o situación laboral.',
+  },
+  {
+    icon: 'graduation-cap',
+    title: 'Modificación de estancia por estudios',
+    text: 'Si terminas tus estudios, puedes modificar tu estancia a una autorización de residencia y trabajo.',
+  },
+  {
+    icon: 'users',
+    title: 'Familiar de ciudadano de la UE',
+    text: 'Si tu pareja o familiar directo es ciudadano español o de la UE, tienes derecho a residir y trabajar en España.',
+  },
+];
+---
+
+<SubpageLayout
+  title="Residencia Legal en España — InstitutoDeGestiones"
+  description="Conoce todas las vías para obtener y renovar tu residencia en España: no lucrativa, arraigo, modificación de estudios y más. Evaluación gratuita en 24h."
+  canonical="https://institutodegestiones.com/residencia/residencia-legal/"
+  ctaHref="#evaluacion"
+>
+  <PageHero
+    eyebrow="Visados y Residencia"
+    title="Residencia Legal en España"
+    subtitle="Conoce todas las vías para obtener y renovar tu residencia en España."
+  />
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-4xl space-y-12 px-4 lg:px-8">
+      <div class="fade-in-up space-y-4 text-body-lg text-muted">
+        <p>
+          No existe una única forma de obtener la residencia en España: existe la vía adecuada para tu situación
+          concreta. Analizamos tu perfil —familiar, académico, laboral y económico— y te decimos con claridad qué
+          opciones tienes, qué requisitos exige cada una y cuánto tarda realmente.
+        </p>
+      </div>
+
+      <div class="fade-in-up">
+        <h2 class="font-display text-2xl font-bold text-navy">Principales vías de residencia</h2>
+        <div class="mt-6 grid gap-6 md:grid-cols-2">
+          {vias.map((v) => (
+            <div class="rounded-card border border-gray-100 bg-light p-6">
+              <span class="flex h-12 w-12 items-center justify-center rounded-card bg-white text-blue shadow-card">
+                <Icon name={v.icon} class="h-6 w-6" />
+              </span>
+              <h3 class="mt-4 font-display text-lg font-semibold text-navy">{v.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">{v.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="fade-in-up rounded-card bg-light p-8">
+        <h2 class="font-display text-2xl font-bold text-navy">Renovaciones y seguimiento</h2>
+        <p class="mt-3 text-body-lg text-muted">
+          La residencia no termina con la primera concesión: hay renovaciones a los 2 y 5 años, y a los 10 años la
+          residencia de larga duración. Gestionamos cada renovación a tiempo para que nunca pierdas tu estatus legal, y
+          te avisamos cuando cumplas los plazos para solicitar la nacionalidad.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+</SubpageLayout>

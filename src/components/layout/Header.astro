@@ -1,0 +1,150 @@
+---
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+
+const isHome = Astro.url.pathname === '/';
+const ctaHref = isHome ? '#evaluacion' : '/#evaluacion';
+
+const visados = [
+  { href: '/visado/visado-de-estudios/', label: 'Visado de Estudios', featured: false },
+  { href: '/residencia/residencia-legal/', label: 'Residencia Legal', featured: false },
+  { href: '/residencia/reagrupacion-familiar/', label: 'Reagrupación Familiar', featured: false },
+  { href: '/visado/estudio-migratorio/', label: 'Estudio Migratorio', featured: true },
+];
+
+const homologacion = [
+  { href: '/homologacion/homologacion-universidad/', label: 'Homologación Universitaria' },
+  { href: '/homologacion/homologacion-tenico/', label: 'Homologación No Universitaria' },
+];
+---
+
+<div class="hidden bg-navy-dark text-white/70 md:block">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 font-mono text-[11px] tracking-wide lg:px-8">
+    <p class="flex items-center gap-5">
+      <span class="flex items-center gap-1.5"><Icon name="map-pin" class="h-3 w-3" />Calle León 35, Madrid</span>
+      <span class="flex items-center gap-1.5"><Icon name="clock" class="h-3 w-3" />Lun–Vie · 9:00–18:00 (CET)</span>
+    </p>
+    <p class="flex items-center gap-5">
+      <a href={SITE.phoneHref} class="flex items-center gap-1.5 transition-colors hover:text-white"><Icon name="phone" class="h-3 w-3" />{SITE.phoneDisplay}</a>
+      <a href={`mailto:${SITE.email}`} class="flex items-center gap-1.5 transition-colors hover:text-white"><Icon name="mail" class="h-3 w-3" />{SITE.email}</a>
+    </p>
+  </div>
+</div>
+
+<header id="site-header" class="sticky top-0 z-[1000] border-b border-white/10 bg-tinta transition-shadow duration-300">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 lg:h-[76px] lg:px-8">
+    <a href="/" class="shrink-0" aria-label="Instituto de Gestiones — Inicio">
+      <span class="block font-display text-lg font-bold leading-none text-white lg:text-[21px]">Instituto de Gestiones</span>
+      <span class="mt-1 block font-mono text-[10px] uppercase tracking-[0.28em] text-white/55">Gestoría de extranjería · Madrid</span>
+    </a>
+
+    <nav class="hidden items-center gap-6 lg:flex" aria-label="Navegación principal">
+      <a href="/" class="text-sm font-medium text-white/85 transition-colors hover:text-white">Inicio</a>
+
+      <div class="group relative">
+        <button
+          type="button"
+          class="flex items-center gap-1 text-sm font-medium text-white/85 transition-colors hover:text-white"
+          aria-haspopup="true"
+        >
+          Visados y Residencia
+          <Icon name="chevron-down" class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+        </button>
+        <div class="invisible absolute left-1/2 top-full z-50 w-72 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+          <div class="overflow-hidden rounded-card border border-black/10 bg-white py-2 shadow-card-hover">
+            {visados.map((l) =>
+              l.featured ? (
+                <a href={l.href} class="block border-l-2 border-sello bg-light px-4 py-3">
+                  <span class="block text-sm font-semibold text-tinta">{l.label}</span>
+                  <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-sello">Empieza aquí</span>
+                </a>
+              ) : (
+                <a href={l.href} class="block px-4 py-2.5 text-sm text-ink transition-colors hover:bg-light hover:text-tinta">{l.label}</a>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div class="group relative">
+        <button
+          type="button"
+          class="flex items-center gap-1 text-sm font-medium text-white/85 transition-colors hover:text-white"
+          aria-haspopup="true"
+        >
+          Homologación
+          <Icon name="chevron-down" class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+        </button>
+        <div class="invisible absolute left-1/2 top-full z-50 w-72 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+          <div class="overflow-hidden rounded-card border border-black/10 bg-white py-2 shadow-card-hover">
+            {homologacion.map((l) => (
+              <a href={l.href} class="block px-4 py-2.5 text-sm text-ink transition-colors hover:bg-light hover:text-tinta">{l.label}</a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <a href="/gestiones-en-espana/" class="text-sm font-medium text-white/85 transition-colors hover:text-white">Gestiones en España</a>
+      <a href="/faq/" class="text-sm font-medium text-white/85 transition-colors hover:text-white">FAQ</a>
+      <a href="/contacto/" class="text-sm font-medium text-white/85 transition-colors hover:text-white">Contacto</a>
+    </nav>
+
+    <div class="flex items-center gap-4">
+      <a
+        href={ctaHref}
+        class="hidden rounded-card bg-sello px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#8F322B] md:inline-flex"
+      >
+        Evaluación gratuita
+      </a>
+      <button
+        id="mobile-menu-toggle"
+        type="button"
+        class="text-white lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Abrir menú"
+      >
+        <Icon name="menu" class="h-6 w-6" />
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobile-menu" class="hidden border-t border-white/10 bg-navy-dark px-4 pb-6 pt-2 lg:hidden" aria-label="Navegación móvil">
+    <a href="/" class="block py-2.5 font-medium text-white">Inicio</a>
+    <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.28em] text-white/50">Visados y Residencia</p>
+    {visados.map((l) => <a href={l.href} class="block py-2 pl-2 text-sm text-white/85">{l.label}</a>)}
+    <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.28em] text-white/50">Homologación</p>
+    {homologacion.map((l) => <a href={l.href} class="block py-2 pl-2 text-sm text-white/85">{l.label}</a>)}
+    <a href="/gestiones-en-espana/" class="mt-3 block py-2.5 font-medium text-white">Gestiones en España</a>
+    <a href="/faq/" class="block py-2.5 font-medium text-white">FAQ</a>
+    <a href="/contacto/" class="block py-2.5 font-medium text-white">Contacto</a>
+    <a href={SITE.phoneHref} class="mt-4 flex items-center gap-2 text-sm font-semibold text-white">
+      <Icon name="phone" class="h-4 w-4" />
+      {SITE.phoneDisplay}
+    </a>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      const isOpen = !menu.classList.contains('hidden');
+      menu.classList.toggle('hidden', isOpen);
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+      toggle.setAttribute('aria-label', isOpen ? 'Abrir menú' : 'Cerrar menú');
+    });
+  }
+
+  const header = document.getElementById('site-header');
+  if (header) {
+    window.addEventListener(
+      'scroll',
+      () => {
+        header.classList.toggle('header-scrolled', window.scrollY > 12);
+      },
+      { passive: true }
+    );
+  }
+</script>
