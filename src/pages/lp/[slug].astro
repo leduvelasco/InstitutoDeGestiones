@@ -1,0 +1,102 @@
+---
+import LandingLayout from '../../components/layout/LandingLayout.astro';
+import LeadForm from '../../components/ui/LeadForm.astro';
+import SocialProof from '../../components/sections/SocialProof.astro';
+import HowItWorks from '../../components/sections/HowItWorks.astro';
+import TestimonialCard from '../../components/ui/TestimonialCard.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { LANDINGS } from '../../data/landings';
+
+export function getStaticPaths() {
+  return LANDINGS.map((l) => ({ params: { slug: l.slug } }));
+}
+
+const slug = Astro.params.slug ?? '';
+const landing = LANDINGS.find((l) => l.slug === slug);
+if (!landing) return Astro.redirect('/404');
+---
+
+<LandingLayout
+  title={landing.title}
+  description={landing.description}
+  canonical={`https://institutodegestiones.com/lp/${landing.slug}/`}
+>
+  <section id="evaluacion" class="bg-tinta py-14 lg:py-24">
+    <div class="mx-auto grid max-w-6xl items-start gap-10 px-4 lg:grid-cols-2 lg:gap-16 lg:px-8">
+      <div>
+        <p class="font-mono text-[11px] font-medium uppercase tracking-[0.24em] text-white/50">{landing.eyebrow}</p>
+        <h1 class="mt-3 font-display text-3xl font-bold leading-tight text-white lg:text-display-lg">{landing.h1}</h1>
+        <p class="mt-4 text-body-lg text-white/65">{landing.subtitle}</p>
+      </div>
+      <div class="lg:sticky lg:top-24">
+        <LeadForm service={landing.service} />
+      </div>
+    </div>
+  </section>
+
+  <SocialProof />
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-4xl px-4 lg:px-8">
+      <h2 class="font-display text-2xl font-bold text-navy">Qué incluye nuestro servicio</h2>
+      <ul class="mt-6 space-y-3">
+        {landing.beneficios.map((b) => (
+          <li class="flex items-start gap-3">
+            <Icon name="check" class="mt-1 h-5 w-5 shrink-0 text-gold" />
+            <span class="text-ink">{b}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {landing.requisitos && (
+    <section class="bg-light py-14 lg:py-20">
+      <div class="mx-auto max-w-4xl px-4 lg:px-8">
+        <h2 class="font-display text-2xl font-bold text-navy">Requisitos principales</h2>
+        <ul class="mt-6 space-y-3">
+          {landing.requisitos.map((r) => (
+            <li class="flex items-start gap-3">
+              <Icon name="check" class="mt-1 h-5 w-5 shrink-0 text-gold" />
+              <span class="text-ink">{r}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <HowItWorks ctaHref="#evaluacion" />
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <h2 class="font-display text-2xl font-bold text-navy">Expedientes reales</h2>
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        <TestimonialCard
+          caseId="Exp. 2025/0142"
+          result="Visado de estudios"
+          quote="Llevaba meses perdida con los trámites. En menos de una semana me explicaron exactamente qué necesitaba. Todo salió perfecto."
+          author="María G."
+          country="Colombia"
+        />
+        <TestimonialCard
+          caseId="Exp. 2024/0968"
+          result="Reagrupación familiar"
+          quote="Pensé que traer a mi familia sería imposible. El equipo se encargó de todo el papeleo y en cuatro meses estábamos juntos en Madrid."
+          author="Carlos M."
+          country="México"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-light py-14 lg:py-20">
+    <div class="mx-auto max-w-3xl px-4 lg:px-8">
+      <h2 class="font-display text-2xl font-bold text-navy">Preguntas frecuentes</h2>
+      <div class="mt-8 space-y-3">
+        {landing.faqs.map((f, i) => <FAQItem question={f.q} answer={f.a} open={i === 0} />)}
+      </div>
+    </div>
+  </section>
+</LandingLayout>

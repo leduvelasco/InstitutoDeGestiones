@@ -11,7 +11,9 @@ export default defineConfig({
   },
   integrations: [
     tailwind(),
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.startsWith('https://institutodegestiones.com/lp/'),
+    }),
   ],
   output: 'static',
 });

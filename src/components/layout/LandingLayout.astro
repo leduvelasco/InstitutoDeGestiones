@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WhatsAppFloat from '../ui/WhatsAppFloat.astro';
+import { SITE } from '../../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+}
+
+const { title, description, canonical } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} noindex={true}>
+  <header class="border-b border-black/10 bg-white">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 lg:h-[72px] lg:px-8">
+      <span class="block font-display text-lg font-bold leading-none text-tinta lg:text-[21px]">Instituto de Gestiones</span>
+      <span class="font-mono text-[11px] tracking-wide text-muted">Gestoría de extranjería · Madrid</span>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="border-t border-black/10 bg-white py-6">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <p class="text-center text-sm text-muted">
+        © {new Date().getFullYear()} Instituto de Gestiones. Todos los derechos reservados.
+      </p>
+      <nav class="mt-3 flex justify-center gap-x-6" aria-label="Legal">
+        <a
+          href="/aviso-legal/"
+          target="_blank"
+          rel="noopener"
+          class="text-sm text-muted underline decoration-ink/20 underline-offset-2 transition-colors hover:text-ink"
+        >Aviso legal</a>
+        <a
+          href="/politica-de-privacidad-policy/"
+          target="_blank"
+          rel="noopener"
+          class="text-sm text-muted underline decoration-ink/20 underline-offset-2 transition-colors hover:text-ink"
+        >Política de privacidad</a>
+      </nav>
+    </div>
+  </footer>
+
+  <WhatsAppFloat />
+</BaseLayout>

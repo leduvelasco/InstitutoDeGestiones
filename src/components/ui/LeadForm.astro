@@ -2,10 +2,10 @@
 import { COUNTRIES, FORM_SERVICES } from '../../data/site';
 
 interface Props {
-  variant?: 'light' | 'dark';
+  service?: string;
 }
 
-const { variant = 'light' } = Astro.props;
+const { service } = Astro.props;
 const uid = Math.random().toString(36).slice(2, 9);
 
 const labelClass = 'mb-1.5 block font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-muted';
@@ -19,7 +19,7 @@ const inputClass =
     <span class="hidden text-white/50 sm:inline">Extranjería</span>
   </p>
 
-  <span class="stamp absolute -top-4 right-5 z-10 -rotate-6 bg-white text-[9px] text-sello sm:text-[10px]" aria-hidden="true">
+  <span class="stamp absolute -top-4 right-5 z-10 -rotate-6 bg-white text-[9px] text-navy sm:text-[10px]" aria-hidden="true">
     Sin coste · Respuesta en 24&nbsp;h
   </span>
 
@@ -63,13 +63,23 @@ const inputClass =
         <div>
           <label for={`lead-${uid}-service`} class={labelClass}>04 — Trámite que necesitas</label>
           <select id={`lead-${uid}-service`} name="service" required class={inputClass}>
-            <option value="" selected disabled>Selecciona trámite</option>
-            {FORM_SERVICES.map((s) => <option value={s}>{s}</option>)}
+            {service
+              ? <option value={service} selected>{service}</option>
+              : <option value="" selected disabled>Selecciona trámite</option>
+            }
+            {FORM_SERVICES.filter((s) => s !== service).map((s) => <option value={s}>{s}</option>)}
           </select>
           <p class="mt-1 hidden text-sm text-sello" data-field-error role="alert"></p>
         </div>
       </div>
     </div>
+
+    <input type="hidden" name="gclid" />
+    <input type="hidden" name="utm_source" />
+    <input type="hidden" name="utm_medium" />
+    <input type="hidden" name="utm_campaign" />
+    <input type="hidden" name="utm_content" />
+    <input type="hidden" name="utm_term" />
 
     <button
       type="submit"
@@ -78,12 +88,12 @@ const inputClass =
       Solicitar evaluación gratuita
     </button>
 
-    <p class={`mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] ${variant === 'dark' ? 'text-white/60' : 'text-muted'}`}>
+    <p class="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
       Sin compromiso · Confidencial
     </p>
-    <p class={`mt-2 text-center text-xs leading-relaxed ${variant === 'dark' ? 'text-white/50' : 'text-muted'}`}>
+    <p class="mt-2 text-center text-xs leading-relaxed text-muted">
       Tus datos se usan solo para evaluar tu caso, conforme al RGPD.
-      <a href="/politica-de-privacidad-policy/" class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink">Política de privacidad</a>.
+      <a href="/politica-de-privacidad-policy/" target="_blank" rel="noopener" class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink">Política de privacidad</a>.
     </p>
     <p class="hidden text-center text-sm" data-form-status role="status"></p>
   </form>
@@ -91,6 +101,15 @@ const inputClass =
 
 <script>
   import { WHATSAPP_URL } from '../../data/site';
+
+  const params = new URLSearchParams(window.location.search);
+  ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((name) => {
+    const val = params.get(name);
+    if (val) {
+      const input = document.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+      if (input) input.value = val;
+    }
+  });
 
   const messages: Record<string, string> = {
     name: 'Introduce tu nombre completo.',
@@ -151,6 +170,8 @@ const inputClass =
         if (!res.ok) throw new Error('error');
         form.innerHTML =
           '<p class="py-8 text-center font-mono text-xs uppercase tracking-[0.14em] text-navy">Solicitud recibida — Te contactamos en menos de 24 h laborables.</p>';
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'generate_lead', service: data.service });
       } catch {
         if (btn) {
           btn.textContent = originalText;
