@@ -23,7 +23,7 @@ const inputClass =
     Sin coste · Respuesta en 24&nbsp;h
   </span>
 
-  <form data-lead-form class="p-5 sm:p-6" novalidate>
+  <form data-lead-form class="relative p-5 sm:p-6" novalidate>
     <div class="space-y-4">
       <div>
         <label for={`lead-${uid}-name`} class={labelClass}>01 — Nombre completo</label>
@@ -33,6 +33,7 @@ const inputClass =
           type="text"
           placeholder="Nombre y apellidos"
           autocomplete="name"
+          maxlength="120"
           required
           class={inputClass}
         />
@@ -74,18 +75,22 @@ const inputClass =
       </div>
     </div>
 
-    <input type="hidden" name="gclid" />
-    <input type="hidden" name="utm_source" />
-    <input type="hidden" name="utm_medium" />
-    <input type="hidden" name="utm_campaign" />
-    <input type="hidden" name="utm_content" />
-    <input type="hidden" name="utm_term" />
+    <div class="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+      <label for={`lead-${uid}-website`}>No rellenes este campo</label>
+      <input id={`lead-${uid}-website`} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
 
     <button
       type="submit"
-      class="mt-5 w-full rounded-card bg-sello py-3.5 font-body text-sm font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#8F322B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sello"
+      class="mt-5 w-full rounded-card bg-sello py-3.5 font-body text-sm font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#8F322B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sello disabled:cursor-not-allowed disabled:opacity-70"
     >
-      Solicitar evaluación gratuita
+      <span class="inline-flex items-center justify-center gap-2">
+        <span data-btn-label data-label="Solicitar evaluación gratuita">Solicitar evaluación gratuita</span>
+        <svg data-btn-spinner class="hidden h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"></path>
+        </svg>
+      </span>
     </button>
 
     <p class="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
@@ -95,46 +100,151 @@ const inputClass =
       Tus datos se usan solo para evaluar tu caso, conforme al RGPD.
       <a href="/politica-de-privacidad-policy/" target="_blank" rel="noopener" class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink">Política de privacidad</a>.
     </p>
-    <p class="hidden text-center text-sm" data-form-status role="status"></p>
+    <p class="hidden text-center text-sm" data-form-status role="status" aria-live="polite"></p>
   </form>
 </div>
 
 <script>
-  import { WHATSAPP_URL } from '../../data/site';
+  import { COUNTRIES, FORM_SERVICES, WHATSAPP_URL } from '../../data/site';
+  import { LeadApiError, getTrackingParams, submitLead, type LeadPayload } from '../../services/leadApi';
 
-  const params = new URLSearchParams(window.location.search);
-  ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((name) => {
-    const val = params.get(name);
-    if (val) {
-      const input = document.querySelector<HTMLInputElement>(`input[name="${name}"]`);
-      if (input) input.value = val;
-    }
-  });
+  getTrackingParams();
 
   const messages: Record<string, string> = {
-    name: 'Introduce tu nombre completo.',
+    name: 'Introduce tu nombre completo (mínimo 3 caracteres).',
     whatsapp: 'Introduce un número de WhatsApp válido, con código de país.',
     country: 'Selecciona el país desde donde nos escribes.',
     service: 'Selecciona el trámite que necesitas.',
   };
 
-  function validateField(field: HTMLInputElement | HTMLSelectElement): boolean {
+  const genericErrorHtml = `No pudimos enviar tu solicitud, inténtalo de nuevo.
+    <button type="button" data-retry class="font-semibold underline">Reintentar</button>
+    o escríbenos por <a href="${WHATSAPP_URL}" target="_blank" rel="noopener" class="font-semibold underline">WhatsApp</a>.`;
+
+  function isValid(field: HTMLInputElement | HTMLSelectElement): boolean {
+    const value = field.value.trim();
+    if (field.name === 'name') return value.length >= 3 && value.length <= 120;
+    if (field.name === 'whatsapp') return /^\+?[\d\s-]{7,15}$/.test(value);
+    if (field.name === 'country') return COUNTRIES.includes(value);
+    if (field.name === 'service') return FORM_SERVICES.includes(value);
+    return true;
+  }
+
+  function setFieldError(field: HTMLInputElement | HTMLSelectElement, message: string): void {
     const errorEl = field.closest('div')?.querySelector<HTMLElement>('[data-field-error]');
-    let valid = true;
-    if (field.name === 'name') valid = field.value.trim().length >= 3;
-    else if (field.name === 'whatsapp') valid = /^\+?[\d\s-]{7,15}$/.test(field.value.trim());
-    else valid = field.value !== '';
     if (errorEl) {
-      errorEl.textContent = valid ? '' : (messages[field.name] ?? 'Campo obligatorio.');
-      errorEl.classList.toggle('hidden', valid);
+      errorEl.textContent = message;
+      errorEl.classList.toggle('hidden', !message);
     }
-    field.classList.toggle('border-sello', !valid);
-    field.classList.toggle('border-ink/20', valid);
+    field.classList.toggle('border-sello', !!message);
+    field.classList.toggle('border-ink/20', !message);
+  }
+
+  function validateField(field: HTMLInputElement | HTMLSelectElement): boolean {
+    const valid = isValid(field);
+    setFieldError(field, valid ? '' : (messages[field.name] ?? 'Campo obligatorio.'));
     return valid;
   }
 
+  function showStatus(status: HTMLElement, html: string): void {
+    status.innerHTML = html;
+    status.classList.remove('hidden', 'text-navy');
+    status.classList.add('text-sello');
+  }
+
+  function hideStatus(status: HTMLElement): void {
+    status.textContent = '';
+    status.classList.add('hidden');
+  }
+
+  function setLoading(form: HTMLFormElement, loading: boolean): void {
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.setAttribute('aria-busy', String(loading));
+    btn.querySelector<HTMLElement>('[data-btn-spinner]')?.classList.toggle('hidden', !loading);
+    const label = btn.querySelector<HTMLElement>('[data-btn-label]');
+    if (label) label.textContent = loading ? 'Enviando…' : (label.dataset.label ?? label.textContent);
+  }
+
+  function handleSendError(
+    form: HTMLFormElement,
+    btn: HTMLButtonElement,
+    status: HTMLElement,
+    err: unknown
+  ): void {
+    if (err instanceof LeadApiError && err.code === 'VALIDATION_ERROR' && err.fields) {
+      let firstInvalid: HTMLElement | null = null;
+      for (const [name, message] of Object.entries(err.fields)) {
+        const field = form.querySelector<HTMLInputElement | HTMLSelectElement>(`[name="${name}"]`);
+        if (!field) continue;
+        setFieldError(field, message);
+        firstInvalid ??= field;
+      }
+      if (firstInvalid) {
+        firstInvalid.focus();
+        return;
+      }
+    } else if (err instanceof LeadApiError && err.code === 'RATE_LIMITED') {
+      showStatus(status, 'Has hecho demasiados intentos. Inténtalo de nuevo en unos minutos.');
+      btn.disabled = true;
+      window.setTimeout(() => {
+        btn.disabled = false;
+      }, 60_000);
+      return;
+    }
+    showStatus(status, genericErrorHtml);
+    status.querySelector<HTMLButtonElement>('[data-retry]')?.addEventListener('click', () => {
+      void send(form);
+    });
+  }
+
+  async function send(form: HTMLFormElement): Promise<void> {
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    if (!btn || !status || form.dataset.sending === 'true') return;
+
+    let valid = true;
+    form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input:not([name="website"]), select').forEach((f) => {
+      if (!validateField(f)) valid = false;
+    });
+    if (!valid) return;
+
+    form.dataset.sending = 'true';
+    setLoading(form, true);
+    hideStatus(status);
+
+    const fd = new FormData(form);
+    const str = (value: FormDataEntryValue | null) => (typeof value === 'string' ? value.trim() : '');
+    const payload: LeadPayload = {
+      name: str(fd.get('name')),
+      whatsapp: str(fd.get('whatsapp')),
+      country: str(fd.get('country')),
+      service: str(fd.get('service')),
+      website: str(fd.get('website')),
+      page_url: window.location.href.slice(0, 512),
+      ...getTrackingParams(),
+    };
+
+    try {
+      await submitLead(payload);
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'generate_lead', service: payload.service });
+      form.reset();
+      form.innerHTML =
+        '<p class="py-8 text-center font-mono text-xs uppercase tracking-[0.14em] text-navy">Solicitud recibida — Te contactamos en menos de 24 h laborables.</p>';
+    } catch (err) {
+      handleSendError(form, btn, status, err);
+    } finally {
+      form.dataset.sending = 'false';
+      setLoading(form, false);
+    }
+  }
+
   document.querySelectorAll<HTMLFormElement>('form[data-lead-form]').forEach((form) => {
-    const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select'));
+    const fields = Array.from(
+      form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input:not([name="website"]), select')
+    );
 
     fields.forEach((field) => {
       field.addEventListener('blur', () => validateField(field));
@@ -144,45 +254,9 @@ const inputClass =
       });
     });
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      let valid = true;
-      fields.forEach((f) => {
-        if (!validateField(f)) valid = false;
-      });
-      if (!valid) return;
-
-      const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      const status = form.querySelector<HTMLElement>('[data-form-status]');
-      const originalText = btn?.textContent ?? '';
-      if (btn) {
-        btn.textContent = 'Enviando…';
-        btn.disabled = true;
-      }
-
-      const data = Object.fromEntries(new FormData(form));
-      try {
-        const res = await fetch('/api/lead', {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: { 'Content-Type': 'application/json' },
-        });
-        if (!res.ok) throw new Error('error');
-        form.innerHTML =
-          '<p class="py-8 text-center font-mono text-xs uppercase tracking-[0.14em] text-navy">Solicitud recibida — Te contactamos en menos de 24 h laborables.</p>';
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: 'generate_lead', service: data.service });
-      } catch {
-        if (btn) {
-          btn.textContent = originalText;
-          btn.disabled = false;
-        }
-        if (status) {
-          status.classList.remove('hidden');
-          status.classList.add('text-sello');
-          status.innerHTML = `No pudimos registrar tu solicitud. Escríbenos por <a href="${WHATSAPP_URL}" target="_blank" rel="noopener" class="font-semibold underline">WhatsApp</a> y te atendemos al momento.`;
-        }
-      }
+      void send(form);
     });
   });
 </script>

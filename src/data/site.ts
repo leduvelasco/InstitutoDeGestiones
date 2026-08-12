@@ -12,6 +12,10 @@ export const WHATSAPP_URL = `https://wa.me/${SITE.whatsappNumber}?text=${encodeU
   'Hola, me interesa una evaluación gratuita para vivir en España'
 )}`;
 
+export const LEAD_API_BASE = import.meta.env.DEV
+  ? 'http://localhost:3000'
+  : 'https://api.institutodegestiones.com';
+
 export const COUNTRIES = [
   'Colombia',
   'México',
