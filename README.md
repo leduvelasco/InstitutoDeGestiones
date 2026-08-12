@@ -54,8 +54,10 @@ src/
 │       ├── WhatsAppFloat.astro
 │       └── StickyMobileBar.astro
 ├── data/
-│   ├── site.ts          # Config global, países, servicios
+│   ├── site.ts          # Config global, países, servicios (fuente única)
 │   └── landings.ts      # Datos de landings de campañas
+├── services/
+│   └── leadApi.ts       # Cliente HTTP del endpoint /api/lead + tracking UTM
 ├── layouts/
 │   └── BaseLayout.astro # Layout raíz HTML (<head>, schema, animaciones)
 ├── pages/               # Routing basado en archivos
@@ -158,7 +160,7 @@ src/
 | `font-mono` | IBM Plex Mono | Etiquetas, metadata, UI micro |
 
 ### Componentes UI reutilizables
-- **`LeadForm`** — Formulario de captura con validación, UTM, fallback WhatsApp
+- **`LeadForm`** — Formulario de captura con validación, UTM, fallback WhatsApp, rate-limiting local (60s) y reintento. El campo **nombre se envía en Title Case** (primera letra de cada palabra en mayúscula) antes de construir el payload.
 - **`Icon`** — ~20 iconos inline SVG (estilo Lucide)
 - **`Button`** — Variantes `primary` / `secondary` / `whatsapp`, 3 tamaños
 - **`FAQItem`** — Acordeón con animación CSS `grid-template-rows`
@@ -168,11 +170,21 @@ src/
 
 ## Datos Centralizados
 
-### `src/data/site.ts`
-- **SITE** — Config global: nombre, URL, teléfono, WhatsApp, email, dirección
+### `src/data/site.ts` (fuente única de verdad)
+Toda la configuración global del negocio vive aquí. **Antes de tocar un dato de contacto o legal, búscalo primero en este archivo**; no dupliques valores hardcodeados en componentes o páginas.
+- **SITE** — Config global: nombre, URL, teléfono, WhatsApp, email, **dirección**
 - **WHATSAPP_URL** — Enlace prefabricado `wa.me` con mensaje por defecto
 - **COUNTRIES** — 19 países latinoamericanos + "Otro" (formulario)
 - **FORM_SERVICES** — 7 opciones de trámite (formulario)
+
+> Regla: la dirección, teléfono, email y nombre del negocio **deben** renderizarse desde `SITE` (p. ej. `SITE.address`). Las páginas legales (`aviso-legal`, `politica-de-privacidad-policy`) y el Header ya consumen `SITE`. No vuelvas a escribir la dirección a mano.
+
+### `src/services/leadApi.ts`
+Cliente del backend de leads:
+- **`submitLead(payload)`** — POST a `LEAD_ENDPOINT` (`LEAD_API_BASE + /api/lead`). En dev apunta a `http://localhost:3000`; en producción a Railway. Configura esto en `site.ts` (`LEAD_API_BASE`).
+- **`getTrackingParams()`** — Lee y persiste en `sessionStorage` las UTMs y `gclid` de la URL.
+- **`LeadApiError`** — Errores tipados: `VALIDATION_ERROR`, `RATE_LIMITED`, `CRM_ERROR`, `INTERNAL_ERROR`, `NETWORK`, `TIMEOUT`.
+- `LeadPayload` — `name`, `whatsapp`, `country`, `service` + tracking opcional.
 
 ### `src/data/landings.ts`
 Datos de las 7 landings de campaña. Cada entrada incluye:
@@ -242,15 +254,41 @@ Astro genera automáticamente páginas de redirect para:
 - `/homologacion/homologacion-de-titulos-no-universitarios/` → `/homologacion/homologacion-tenico/`
 
 ### Endpoint `/api/lead`
-El formulario envía a `/api/lead` (POST, JSON). El proyecto actualmente es **100% estático**; este endpoint **no existe** en el build. Antes de lanzar campañas se debe:
-- Crear un endpoint serverless (Astro SSR, Vercel/Netlify Function, etc.), o
-- Usar un servicio externo (Formspree, Webhook, etc.)
+El formulario envía a `LEAD_ENDPOINT` (POST, JSON) vía `src/services/leadApi.ts`. El proyecto web es **100% estático**; el endpoint **vive en un backend aparte**:
+- **Dev**: `LEAD_API_BASE = http://localhost:3000`
+- **Prod**: `https://institutodegestionesapi-production.up.railway.app`
+
+El backend debe responder:
+- `200` con `{ ok: true, id: string }`
+- `400` con `{ fields: Record<string, string> }` (errores de validación por campo)
+- `429` (rate limit), `502` (error CRM)
+
+Antes de lanzar campañas verifica que el endpoint de producción responde y que el CORS permite el dominio.
 
 ### GTM / Google Ads
 Los snippets de GTM están comentados en `BaseLayout.astro`. Para activar:
 1. Reemplazar `GTM-XXXXXXX` por el ID real
 2. Descomentar las líneas de `<script>` y `<noscript>`
 3. Configurar la conversión `generate_lead` en Google Ads
+
+Al enviar un lead con éxito se dispara:
+- `window.dataLayer.push({ event: 'generate_lead', service })`
+- `window.gtag?.('event', 'generate_lead')`
+
+---
+
+## Guía para Futuros Cambios
+
+Reglas a seguir para mantener la coherencia del proyecto:
+
+1. **Datos centralizados**: cualquier dato de negocio (dirección, teléfono, email, redes, servicios, países) va en `src/data/site.ts`. No hardcodear en componentes ni páginas.
+2. **Páginas legales**: `aviso-legal`, `politica-de-privacidad-policy`, `condiciones-de-contratacion` y `politica-cookies` viven en `src/pages/`. Los enlaces a estas páginas usan rutas relativas (`/aviso-legal/`) salvo que necesites absolutas, en cuyo caso usa `SITE.url`.
+3. **Landings**: se añaden nuevos servicios en `src/data/landings.ts` (objeto con `slug`, SEO, contenido y `service`). La ruta dinámica `src/pages/lp/[slug].astro` los renderiza automáticamente. Las landings son `noindex` y no pueden enlazar hacia fuera (sin puntos de fuga).
+4. **Formulario de leads**: no alteres la validación ni el payload sin probar contra el endpoint real. El nombre siempre se normaliza a Title Case. Los campos ocultos (UTM) y el honeypot `website` no deben eliminarse.
+5. **Estilos**: usa únicamente los tokens de `tailwind.config.mjs` y las utilidades definidas en `src/styles/global.css`. No inventes valores de color nuevos.
+6. **SEO**: toda página usa `SubpageLayout` o `LandingLayout`, que proveen `<head>`, canonical, OG y JSON-LD. Si añades una página pública, actualiza la tabla de "Rutas y Páginas".
+7. **Redirecciones**: para URLs obsoletas crea una página de redirect en `src/pages/` (ver `homologacion-de-titulos-*.astro`).
+8. **Tras un cambio relevante**: actualiza esta sección "Archivos Modificados Recientemente" con una fila por archivo.
 
 ---
 
@@ -260,10 +298,13 @@ Los snippets de GTM están comentados en `BaseLayout.astro`. Para activar:
 |---------|--------|
 | `src/layouts/BaseLayout.astro` | Prop `noindex` + placeholder GTM |
 | `src/components/layout/LandingLayout.astro` | Nuevo layout sin navegación |
-| `astro.config.mjs` | Filtro sitemap excluye `/lp/` |
+| `astro.config.mjs` | Filtro sitemap excluye `/lp/` + `allowedHosts` (tunnel dev) |
 | `src/data/landings.ts` | Datos de 7 landings de campaña |
 | `src/pages/lp/[slug].astro` | Ruta dinámica para landings |
-| `src/components/ui/LeadForm.astro` | Prop `service`, UTM, `target="_blank"`, dataLayer |
+| `src/components/ui/LeadForm.astro` | Prop `service`, UTM, `target="_blank"`, dataLayer, nombre en Title Case |
+| `src/services/leadApi.ts` | Cliente HTTP tipado del endpoint `/api/lead` |
+| `src/components/layout/Header.astro` | Dirección del negocio desde `SITE.address` |
+| `src/pages/aviso-legal.astro`, `src/pages/politica-de-privacidad-policy.astro` | Domicilio desde `SITE.address` |
 
 ---
 
