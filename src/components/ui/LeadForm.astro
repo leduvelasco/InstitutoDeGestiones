@@ -100,7 +100,7 @@ const inputClass =
       Tus datos se usan solo para evaluar tu caso, conforme al RGPD.
       <a href="/politica-de-privacidad-policy/" target="_blank" rel="noopener" class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink">Política de privacidad</a>.
     </p>
-    <p class="hidden text-center text-sm" data-form-status role="status" aria-live="polite"></p>
+    <div class="hidden text-center text-sm" data-form-status role="status" aria-live="polite"></div>
   </form>
 </div>
 
@@ -157,14 +157,16 @@ const inputClass =
     status.classList.add('hidden');
   }
 
+  let rateLimitedUntil = 0;
+
   function setLoading(form: HTMLFormElement, loading: boolean): void {
     const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     if (!btn) return;
-    btn.disabled = loading;
     btn.setAttribute('aria-busy', String(loading));
     btn.querySelector<HTMLElement>('[data-btn-spinner]')?.classList.toggle('hidden', !loading);
     const label = btn.querySelector<HTMLElement>('[data-btn-label]');
     if (label) label.textContent = loading ? 'Enviando…' : (label.dataset.label ?? label.textContent);
+    btn.disabled = loading || Date.now() < rateLimitedUntil;
   }
 
   function handleSendError(
@@ -187,8 +189,10 @@ const inputClass =
       }
     } else if (err instanceof LeadApiError && err.code === 'RATE_LIMITED') {
       showStatus(status, 'Has hecho demasiados intentos. Inténtalo de nuevo en unos minutos.');
+      rateLimitedUntil = Date.now() + 60_000;
       btn.disabled = true;
       window.setTimeout(() => {
+        rateLimitedUntil = 0;
         btn.disabled = false;
       }, 60_000);
       return;
@@ -230,6 +234,7 @@ const inputClass =
       await submitLead(payload);
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'generate_lead', service: payload.service });
+      window.gtag?.('event', 'generate_lead');
       form.reset();
       form.innerHTML =
         '<p class="py-8 text-center font-mono text-xs uppercase tracking-[0.14em] text-navy">Solicitud recibida — Te contactamos en menos de 24 h laborables.</p>';
