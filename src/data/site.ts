@@ -5,7 +5,7 @@ export const SITE = {
   phoneHref: 'tel:+34600000000',
   whatsappNumber: '34600000000',
   email: 'info@institutodegestiones.com',
-  address: 'Calle León 35, Madrid, España',
+  address: 'Calle Quijano Carlos 1333, Montevideo, Uruguay',
 };
 
 export const WHATSAPP_URL = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(
