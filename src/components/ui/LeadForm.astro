@@ -220,8 +220,15 @@ const inputClass =
 
     const fd = new FormData(form);
     const str = (value: FormDataEntryValue | null) => (typeof value === 'string' ? value.trim() : '');
+    const toTitleCase = (value: string) =>
+      value
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
     const payload: LeadPayload = {
-      name: str(fd.get('name')),
+      name: toTitleCase(str(fd.get('name'))),
       whatsapp: str(fd.get('whatsapp')),
       country: str(fd.get('country')),
       service: str(fd.get('service')),
