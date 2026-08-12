@@ -14,7 +14,7 @@ export const WHATSAPP_URL = `https://wa.me/${SITE.whatsappNumber}?text=${encodeU
 
 export const LEAD_API_BASE = import.meta.env.DEV
   ? 'http://localhost:3000'
-  : 'institutodegestionesapi-production.up.railway.app';
+  : 'https://institutodegestionesapi-production.up.railway.app';
 
 export const COUNTRIES = [
   'Colombia',
