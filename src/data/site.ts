@@ -5,6 +5,7 @@ export const SITE = {
   phoneHref: 'tel:+34600000000',
   whatsappNumber: '34600000000',
   email: 'info@institutodegestiones.com',
+  addressBanner: 'Calle Quijano Carlos 1333, Uruguay',
   address: 'Calle Quijano Carlos 1333, Montevideo, Uruguay',
 };
 
