@@ -1,6 +1,7 @@
 ---
 import SubpageLayout from '../components/layout/SubpageLayout.astro';
 import PageHero from '../components/layout/PageHero.astro';
+import { SITE } from '../data/site';
 ---
 
 <SubpageLayout
@@ -15,7 +16,7 @@ import PageHero from '../components/layout/PageHero.astro';
       <div>
         <h2 class="font-display text-2xl font-bold text-navy">1. Responsable del tratamiento</h2>
         <p class="mt-3">
-          InstitutoDeGestiones, con domicilio en Calle León 35, Madrid, España, es responsable del tratamiento de los
+          InstitutoDeGestiones, con domicilio en {SITE.address}, es responsable del tratamiento de los
           datos personales recogidos en este sitio web. Contacto: info@institutodegestiones.com.
         </p>
       </div>

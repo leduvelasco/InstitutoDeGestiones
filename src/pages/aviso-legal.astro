@@ -1,6 +1,7 @@
 ---
 import SubpageLayout from '../components/layout/SubpageLayout.astro';
 import PageHero from '../components/layout/PageHero.astro';
+import { SITE } from '../data/site';
 ---
 
 <SubpageLayout
@@ -16,7 +17,7 @@ import PageHero from '../components/layout/PageHero.astro';
         <h2 class="font-display text-2xl font-bold text-navy">1. Datos identificativos</h2>
         <p class="mt-3">
           En cumplimiento de la Ley 34/2002 (LSSI), se informa de que este sitio web es titularidad de
-          InstitutoDeGestiones, con domicilio en Calle León 35, Madrid, España. Contacto: info@institutodegestiones.com
+          InstitutoDeGestiones, con domicilio en {SITE.address}. Contacto: info@institutodegestiones.com
           / +34 600 000 000.
         </p>
       </div>
